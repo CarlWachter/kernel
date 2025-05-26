@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1748281000202,
+  "lastUpdate": 1748281509370,
   "repoUrl": "https://github.com/CarlWachter/kernel",
   "entries": {
     "Benchmark": [
@@ -328,6 +328,190 @@ window.BENCHMARK_DATA = {
             "range": 2.5088593025516603,
             "group": "Mutex",
             "plot_group": "Mutex Stress Test Average Time per Iteration"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "carlwachter@web.de",
+            "name": "CarlWachter",
+            "username": "CarlWachter"
+          },
+          "committer": {
+            "email": "carlwachter@web.de",
+            "name": "CarlWachter",
+            "username": "CarlWachter"
+          },
+          "distinct": true,
+          "id": "32577e9d818c9467a4d5db007ff3d9794a3abfdc",
+          "message": "feat(bench): Parallel execution of benchmarks",
+          "timestamp": "2025-05-26T19:27:02+02:00",
+          "tree_id": "862d853936fd945a7eff3d4eb607e3b35d627f74",
+          "url": "https://github.com/CarlWachter/kernel/commit/32577e9d818c9467a4d5db007ff3d9794a3abfdc"
+        },
+        "date": 1748281505988,
+        "tool": "hermit-bench",
+        "benches": [
+          {
+            "name": "Netbench TCP BW - Client",
+            "value": 4.845054626464844,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "Netbench TCP BW - Server",
+            "value": 4.900215148925781,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "Netbench UDP BW - Client",
+            "value": 4.842720031738281,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "Netbench UDP BW - Server",
+            "value": 4.876701354980469,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "Netbench TCP Latency - Client",
+            "value": 4.9062652587890625,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "Netbench TCP Latency - Server",
+            "value": 4.87359619140625,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "Netbench UDP Latency - Client",
+            "value": 4.90093994140625,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "Netbench UDP Latency - Server",
+            "value": 4.849845886230469,
+            "unit": "MB",
+            "range": 0,
+            "group": "File Size",
+            "plot_group": "Netbench Benchmark File Size"
+          },
+          {
+            "name": "TCP client",
+            "value": 349.94929835501216,
+            "unit": "Mbit/s",
+            "range": 9.79062918617845,
+            "group": "Networking",
+            "plot_group": "Netbench Bandwidth - 1000x1MB"
+          },
+          {
+            "name": "TCP server",
+            "value": 931.1647761962945,
+            "unit": "Mbit/s",
+            "range": 22.586590461588415,
+            "group": "Networking",
+            "plot_group": "Netbench Bandwidth - 1000x1MB"
+          },
+          {
+            "name": "95th percentile TCP Client Latency",
+            "value": 37399210.666666664,
+            "unit": "ns",
+            "range": 2615608.0906625814,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1MB"
+          },
+          {
+            "name": "Max TCP Client Latency",
+            "value": 48584021.33333333,
+            "unit": "ns",
+            "range": 9430709.087402401,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1MB"
+          },
+          {
+            "name": "95th percentile TCP Server Latency",
+            "value": 39496362.66666667,
+            "unit": "ns",
+            "range": 988606.9335859537,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1MB"
+          },
+          {
+            "name": "Max TCP Server Latency",
+            "value": 40894464,
+            "unit": "ns",
+            "range": 0,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1MB"
+          },
+          {
+            "name": "UDP server",
+            "value": 107.57428267331274,
+            "unit": "Mbit/s",
+            "range": 1.8075627572543336,
+            "group": "Networking",
+            "plot_group": "Netbench Bandwidth - 1000x1472B"
+          },
+          {
+            "name": "UDP client",
+            "value": 124.13296003521052,
+            "unit": "Mbit/s",
+            "range": 4.983054927181249,
+            "group": "Networking",
+            "plot_group": "Netbench Bandwidth - 1000x1472B"
+          },
+          {
+            "name": "95th percentile UDP Client Latency",
+            "value": 244394.6666666667,
+            "unit": "ns",
+            "range": 19308.729171600655,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1472B"
+          },
+          {
+            "name": "Max UDP Client Latency",
+            "value": 466944,
+            "unit": "ns",
+            "range": 23170.47500592079,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1472B"
+          },
+          {
+            "name": "95th percentile UDP Server Latency",
+            "value": 256682.6666666667,
+            "unit": "ns",
+            "range": 21239.602088760723,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1472B"
+          },
+          {
+            "name": "Max UDP Server Latency",
+            "value": 652629.3333333333,
+            "unit": "ns",
+            "range": 117450.41431268866,
+            "group": "Networking",
+            "plot_group": "Netbench Latency - 250x1472B"
           }
         ]
       }
