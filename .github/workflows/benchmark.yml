@@ -1,12 +1,11 @@
 name: Benchmark
 
 on:
-  pull_request_target:
+  pull_request:
   merge_group:
   push:
     branches:
       - main
-      - test
 
 permissions:
           pull-requests: write
@@ -83,7 +82,7 @@ jobs:
               output-file-path: ${{ steps.run-bench.outputs.result-file }}
               github-token: ${{ secrets.GITHUB_TOKEN }}
               benchmark-data-dir-path: benchmarks
-              gh-repository: https://github.com/hermit-os/hermit-bench.git
+              gh-repository: github.com/hermit-os/hermit-bench
               comment-always: true
               benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
               auto-push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} 
