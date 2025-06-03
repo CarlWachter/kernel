@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - test
 
 permissions:
           pull-requests: write
@@ -16,7 +17,7 @@ env:
 jobs:
     benchmark:
         name: Run Benchmarks
-        runs-on: [self-hosted]
+        runs-on: ubuntu-latest #[self-hosted]
 
         strategy:
           matrix:
