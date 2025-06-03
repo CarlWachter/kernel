@@ -47,7 +47,7 @@ jobs:
           - name: Install dependencies
             run: |
               sudo apt-get update
-              sudo apt-get install -y --no-install-recommends qemu-system-x86 parallel gh
+              sudo apt-get install -y --no-install-recommends qemu-system-x86 cpu-checker parallel gh
           - name: Download loader
             run: gh release download --repo hermit-os/loader --pattern hermit-loader-x86_64
           - uses: mkroening/rust-toolchain-toml@main
