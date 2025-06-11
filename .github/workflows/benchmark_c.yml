@@ -1,0 +1,80 @@
+name: Benchmark
+
+on:
+  pull_request_target:
+  merge_group:
+  push:
+    branches:
+      - main
+      - cb/hermit-c
+
+permissions:
+          pull-requests: write
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+    benchmark:
+        name: Run Benchmarks
+        runs-on: [self-hosted]
+        container: 
+          image: ghcr.io/hermit-os/hermit-gcc:x86_64
+          options: --privileged
+        defaults:
+          run:
+            working-directory: kernel
+
+        steps:
+          - name: Checkout hermit-c
+            uses: actions/checkout@v4
+            with:
+              repository: CarlWachter/hermit-c
+              ref: test
+              submodules: true
+          - name: Remove hermit-kernel submodule
+            run: git rm -r kernel
+          - name: Checkout hermit-kernel
+            uses: actions/checkout@v4
+            with:
+              path: kernel
+          - name: Install dependencies
+            run: |
+              sudo apt-get update
+              sudo apt-get install -y --no-install-recommends qemu-system-x86 cpu-checker parallel gh meson
+          - name: Download loader
+            run: gh release download --repo hermit-os/loader --pattern hermit-loader-x86_64
+          - uses: mkroening/rust-toolchain-toml@main
+          - name: Install uhyve
+            run: cargo +stable install --locked uhyve
+          - name: Check KVM availability
+            run: |
+              lscpu
+              kvm-ok
+          - uses: dtolnay/rust-toolchain@stable
+          - uses: dtolnay/rust-toolchain@nightly
+            with:
+              components: rust-src
+          - uses: mkroening/rust-toolchain-toml@main
+            with:
+              toolchain-file: "kernel/rust-toolchain.toml"
+          - name: Configure meson
+            run: meson setup --cross-file cross/x86_64-hermit.ini build-x86_64 --buildtype release
+          - name: Run benchmarks
+            uses: hermit-os/hermit-bench@main
+            id: run-bench
+            with: 
+              benchmark-file: /kernel/.github/benchmarks/c.json
+              benchmark-build: true
+              build-command: "meson compile -C build-x86_64"
+          - name: Store benchmark results
+            uses: hermit-os/github-action-benchmark@main
+            with:
+              tool: 'hermit-bench'
+              output-file-path: ${{ steps.run-bench.outputs.result-file }}
+              github-token: ${{ secrets.GITHUB_TOKEN }}
+              benchmark-data-dir-path: benchmarks
+              gh-repository: github.com/hermit-os/hermit-bench
+              comment-always: true
+              benchmark-matrix-name: "C Benchmarks"
+              auto-push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }} 

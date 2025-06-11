@@ -1,0 +1,81 @@
+[
+    {
+        "name": "1 core",
+        "command": "sudo qemu-system-x86_64 -smp 1 -cpu qemu64,apic,fsgsbase,rdtscp,xsave,xsaveopt,fxsr,rdrand -display none -m 128M -serial stdio -kernel hermit-loader-x86_64 -initrd build-x86_64/startup_bench",
+        "external_time": true,
+        "iterations": 25,
+        "group": "C",
+        "plot_group": "Startup Time"
+    },
+    {
+        "name": "2 cores",
+        "command": "sudo qemu-system-x86_64 -smp 2 -cpu qemu64,apic,fsgsbase,rdtscp,xsave,xsaveopt,fxsr,rdrand -display none -m 128M -serial stdio -kernel hermit-loader-x86_64 -initrd build-x86_64/startup_bench",
+        "external_time": true,
+        "iterations": 25,
+        "group": "C",
+        "plot_group": "Startup Time"
+    },
+    {
+        "name": "4 cores",
+        "command": "sudo qemu-system-x86_64 -smp 4 -cpu qemu64,apic,fsgsbase,rdtscp,xsave,xsaveopt,fxsr,rdrand -display none -m 128M -serial stdio -kernel hermit-loader-x86_64 -initrd build-x86_64/startup_bench",
+        "external_time": true,
+        "iterations": 25,
+        "group": "C",
+        "plot_group": "Startup Time"
+    },
+    {
+        "name": "Allocation Benchmarks",
+        "path": "build-x86_64/alloc_bench",
+        "group": "File Size",
+        "plot_group": "C Benchmark File Size"
+    },
+    {
+        "name": "Micro Benchmarks",
+        "path": "build-x86_64/micro_bench",
+        "group": "File Size",
+        "plot_group": "C Benchmark File Size"
+    },
+    {
+        "name": "Mutex Benchmark",
+        "path": "build-x86_64/mutex_bench",
+        "group": "File Size",
+        "plot_group": "C Benchmark File Size"
+    },
+    {
+        "name": "Pi Multithreaded Benchmark",
+        "path": "build-x86_64/multithreaded_bench",
+        "group": "File Size",
+        "plot_group": "C Benchmark File Size"
+    },
+    {
+        "name": "Startup Benchmark",
+        "path": "build-x86_64/startup_bench",
+        "group": "File Size",
+        "plot_group": "C Benchmark File Size"
+    },
+    {
+        "name": "Pi Multithreaded Benchmark",
+        "command": "sudo qemu-system-x86_64 -smp 4 -cpu qemu64,apic,fsgsbase,rdtscp,xsave,xsaveopt,fxsr,rdrand -display none -m 512M -serial stdio -kernel hermit-loader-x86_64 -initrd build-x86_64/multithreaded_bench",
+        "iterations": 15,
+        "group": "General",
+        "plot_group": "Multithreaded Pi Efficiency"
+    },
+    {
+        "name": "Mutex Stress Test",
+        "command": "sudo qemu-system-x86_64 -smp 2 -cpu qemu64,apic,fsgsbase,rdtscp,xsave,xsaveopt,fxsr,rdrand -display none -m 512M -serial stdio -kernel hermit-loader-x86_64 -initrd build-x86_64/mutex_bench",
+        "iterations": 50,
+        "group": "Mutex"
+    },
+    {
+        "name": "Allocation Benchmarks",
+        "command": "sudo qemu-system-x86_64 -smp 1 -cpu qemu64,apic,fsgsbase,rdtscp,xsave,xsaveopt,fxsr,rdrand -display none -m 2G -serial stdio -kernel hermit-loader-x86_64 -initrd build-x86_64/alloc_bench",
+        "iterations": 40,
+        "group": "Allocations"
+    },
+    {
+        "name": "Micro Benchmarks",
+        "command": "sudo qemu-system-x86_64 -smp 4 -cpu qemu64,apic,fsgsbase,rdtscp,xsave,xsaveopt,fxsr,rdrand -display none -m 2G -serial stdio -kernel hermit-loader-x86_64 -initrd build-x86_64/micro_bench",
+        "iterations": 20,
+        "group": "Micro"
+    }
+]
