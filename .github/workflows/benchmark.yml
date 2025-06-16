@@ -18,19 +18,20 @@ jobs:
     benchmark:
         name: Run Benchmarks
         runs-on: ubuntu-latest #[self-hosted]
+        environment: benchmark
 
         strategy:
           matrix:
             include:
-              #- benchmark-file: /kernel/.github/benchmarks/general.json
-              #  benchmark-matrix-name: General
-              #  benchmark-build: true
+              - benchmark-file: /kernel/.github/benchmarks/general.json
+                benchmark-matrix-name: General
+                benchmark-build: true
               #- benchmark-file: /kernel/.github/benchmarks/misc.json
               #  benchmark-matrix-name: Misc
               #  benchmark-build: false
-              - benchmark-file: /kernel/.github/benchmarks/netbench.json
-                benchmark-matrix-name: Netbench
-                benchmark-build: false
+              #- benchmark-file: /kernel/.github/benchmarks/netbench.json
+              #  benchmark-matrix-name: Netbench
+              #  benchmark-build: false
 
         steps:
           - name: setup tap device
@@ -86,7 +87,7 @@ jobs:
             with:
               tool: 'hermit-bench'
               output-file-path: ${{ steps.run-bench.outputs.result-file }}
-              github-token: ${{ secrets.GITHUB_TOKEN }}
+              github-token: ${{ secrets.HERMIT_BENCH_GITHUB_TOKEN }}
               benchmark-data-dir-path: benchmarks
               gh-repository: github.com/CarlWachter/hermit-bench
               comment-always: true
