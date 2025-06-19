@@ -28,9 +28,9 @@ jobs:
               - benchmark-file: /kernel/.github/benchmarks/misc.json
                 benchmark-matrix-name: Misc
                 benchmark-build: false
-              - benchmark-file: /kernel/.github/benchmarks/netbench.json
-                benchmark-matrix-name: Netbench
-                benchmark-build: false
+              #- benchmark-file: /kernel/.github/benchmarks/netbench.json
+              #  benchmark-matrix-name: Netbench
+              #  benchmark-build: false
 
         steps:
           - name: Checkout hermit-rs
