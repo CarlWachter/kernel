@@ -17,7 +17,7 @@ jobs:
     benchmark:
         name: Run Benchmarks
         runs-on: ubuntu-latest #[self-hosted]
-        environment: ${{ github.event_name == 'push' && 'benchmark' || 'default' }}
+        environment: ${{ github.event_name == 'push' && 'benchmark' || '' }}
 
         strategy:
           matrix:
