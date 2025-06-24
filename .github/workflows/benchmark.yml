@@ -22,15 +22,15 @@ jobs:
         strategy:
           matrix:
             include:
-              - benchmark-file: /kernel/.github/benchmarks/general.json
-                benchmark-matrix-name: General
-                benchmark-build: true
-              - benchmark-file: /kernel/.github/benchmarks/misc.json
-                benchmark-matrix-name: Misc
-                benchmark-build: false
-              #- benchmark-file: /kernel/.github/benchmarks/netbench.json
-              #  benchmark-matrix-name: Netbench
+              #- benchmark-file: /kernel/.github/benchmarks/general.json
+              #  benchmark-matrix-name: General
+              #  benchmark-build: true
+              #- benchmark-file: /kernel/.github/benchmarks/misc.json
+              #  benchmark-matrix-name: Misc
               #  benchmark-build: false
+              - benchmark-file: /kernel/.github/benchmarks/netbench.json
+                benchmark-matrix-name: Netbench
+                benchmark-build: false
 
         steps:
           - name: Checkout hermit-rs
@@ -69,6 +69,12 @@ jobs:
           - uses: mkroening/rust-toolchain-toml@main
             with:
               toolchain-file: "kernel/rust-toolchain.toml"
+          - name: Set up tap device
+            if: matrix.benchmark-matrix-name == 'Netbench'
+            run: |
+              ip tuntap add tap0 mode tap
+              ip addr add 10.0.5.1/24 broadcast 10.0.5.255 dev tap0
+              ip link set dev tap0 
           - name: Run benchmarks
             uses: hermit-os/hermit-bench@main
             id: run-bench
