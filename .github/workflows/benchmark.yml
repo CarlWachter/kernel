@@ -24,13 +24,10 @@ jobs:
             include:
               #- benchmark-file: /kernel/.github/benchmarks/general.json
               #  benchmark-matrix-name: General
-              #  benchmark-build: true
               #- benchmark-file: /kernel/.github/benchmarks/misc.json
               #  benchmark-matrix-name: Misc
-              #  benchmark-build: false
               - benchmark-file: /kernel/.github/benchmarks/netbench.json
                 benchmark-matrix-name: Netbench
-                benchmark-build: false
 
         steps:
           - name: Checkout hermit-rs
@@ -44,7 +41,7 @@ jobs:
             uses: actions/checkout@v4
             with:
               path: kernel
-          - name: Install dependencies 
+          - name: Install dependencies
             run: |
               sudo apt-get update
               sudo apt-get install -y --no-install-recommends qemu-system-x86 cpu-checker parallel gh
@@ -72,16 +69,23 @@ jobs:
           - name: Set up tap device
             if: matrix.benchmark-matrix-name == 'Netbench'
             run: |
-              ip tuntap add tap0 mode tap
-              ip addr add 10.0.5.1/24 broadcast 10.0.5.255 dev tap0
-              ip link set dev tap0 
+              sudo ip tuntap add tap10 mode tap
+              sudo ip addr add 10.0.5.1/24 broadcast 10.0.5.255 dev tap10
+              sudo ip link set dev tap10 
+              echo 1 | sudo tee /proc/sys/net/ipv4/conf/tap10/proxy_arp
+          - name: just do it
+            run: |
+                cargo build --manifest-path benches/netbench/Cargo.toml --bin tcp-server-bw -Zbuild-std=core,alloc,std,panic_abort --target x86_64-unknown-hermit --release
+          #      #sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm -initrd target/x86_64-unknown-hermit/release/tcp-server-bw -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.1 --bytes 1048576 --rounds 1000"
+          - name: normalish bench
+            run: |
+                cargo build --manifest-path ./Cargo.toml --bin tcp-client-bw --release --target x86_64-unknown-linux-gnu
+                parallel ::: 'sleep 5 && cargo run --manifest-path ./Cargo.toml --bin tcp-client-bw --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.5 --bytes 1048576 --rounds 1000' 'sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm -initrd target/x86_64-unknown-hermit/release/tcp-server-bw -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.1 --bytes 1048576 --rounds 1000"'
           - name: Run benchmarks
             uses: hermit-os/hermit-bench@main
             id: run-bench
             with: 
               benchmark-file: ${{ matrix.benchmark-file }}
-              benchmark-build: ${{ matrix.benchmark-build }}
-              build-command: "cargo build -Zbuild-std=std,panic_abort --target x86_64-unknown-hermit --release"
           - name: Store benchmark results
             uses: hermit-os/github-action-benchmark@main
             with:
