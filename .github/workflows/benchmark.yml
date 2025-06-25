@@ -22,15 +22,12 @@ jobs:
         strategy:
           matrix:
             include:
-              #- benchmark-file: /kernel/.github/benchmarks/general.json
-              #  benchmark-matrix-name: General
-              #  benchmark-build: true
-              #- benchmark-file: /kernel/.github/benchmarks/misc.json
-              #  benchmark-matrix-name: Misc
-              #  benchmark-build: false
+              - benchmark-file: /kernel/.github/benchmarks/general.json
+                benchmark-matrix-name: General
+              - benchmark-file: /kernel/.github/benchmarks/misc.json
+                benchmark-matrix-name: Misc
               - benchmark-file: /kernel/.github/benchmarks/netbench.json
                 benchmark-matrix-name: Netbench
-                benchmark-build: false
 
         steps:
           - name: Checkout hermit-rs
@@ -80,8 +77,6 @@ jobs:
             id: run-bench
             with: 
               benchmark-file: ${{ matrix.benchmark-file }}
-              benchmark-build: ${{ matrix.benchmark-build }}
-              build-command: "cargo build -Zbuild-std=std,panic_abort --target x86_64-unknown-hermit --release"
           - name: Store benchmark results
             uses: hermit-os/github-action-benchmark@main
             with:
