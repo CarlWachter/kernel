@@ -1,7 +1,7 @@
 name: Benchmark
 
 on:
-  pull_request_target:
+  pull_request:
   merge_group:
   push:
     branches:
@@ -16,7 +16,7 @@ env:
 jobs:
     benchmark:
         name: Run Benchmarks
-        runs-on: [self-hosted]
+        runs-on: ubuntu-latest #[self-hosted]
         environment: ${{ github.event_name == 'push' && 'benchmark' || '' }}
 
         strategy:
@@ -85,7 +85,7 @@ jobs:
               output-file-path: ${{ steps.run-bench.outputs.result-file }}
               github-token: ${{ github.event_name == 'push' && secrets.HERMIT_BENCH_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
               benchmark-data-dir-path: benchmarks
-              gh-repository: github.com/hermit-os/hermit-bench
+              gh-repository: github.com/CarlWachter/hermit-bench
               comment-always: true
               benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
               auto-push: ${{ github.event_name == 'push' }} 
