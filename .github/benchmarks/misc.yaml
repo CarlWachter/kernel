@@ -1,8 +1,15 @@
 - name: Micro Benchmarks
   bin: micro_benchmarks
   manifest_path: benches/micro/Cargo.toml
-  command: sudo qemu-system-x86_64 -display none -smp 4 -m 512M -serial stdio -enable-kvm \
-    -cpu host,migratable=no,+invtsc -kernel hermit-loader-x86_64 -initrd target/x86_64-unknown-hermit/release/micro_benchmarks
+  command: sudo qemu-system-x86_64 \
+    -display none \
+    -smp 4 \
+    -m 512M \
+    -serial stdio \
+    -enable-kvm \
+    -cpu host,migratable=no,+invtsc \
+    -kernel hermit-loader-x86_64 \
+    -initrd target/x86_64-unknown-hermit/release/micro_benchmarks
   iterations: 25
   group: Micro
 
@@ -10,7 +17,7 @@
   bin: alloc_benchmarks
   manifest_path: benches/alloc/Cargo.toml
   command: sudo qemu-system-x86_64 -display none -smp 1 -m 5G -serial stdio -enable-kvm \
-    -cpu host,migratable=no,+invtsc -kernel hermit-loader-x86_64 -initrd target/x86_64-unknown-hermit/release/alloc_benchmarks
+        -cpu host,migratable=no,+invtsc -kernel hermit-loader-x86_64 -initrd target/x86_64-unknown-hermit/release/alloc_benchmarks
   iterations: 50
   group: Allocations
 
@@ -18,6 +25,6 @@
   bin: mutex
   manifest_path: benches/mutex/Cargo.toml
   command: sudo qemu-system-x86_64 -display none -smp 2 -m 512M -serial stdio -enable-kvm \
-    -cpu host,migratable=no,+invtsc -kernel hermit-loader-x86_64 -initrd target/x86_64-unknown-hermit/release/mutex
+        -cpu host,migratable=no,+invtsc -kernel hermit-loader-x86_64 -initrd target/x86_64-unknown-hermit/release/mutex
   iterations: 50
   group: Mutex
