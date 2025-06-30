@@ -24,10 +24,10 @@ jobs:
             include:
               - benchmark-file: /kernel/.github/benchmarks/general.json
                 benchmark-matrix-name: General
-                benchmark-build: true
               - benchmark-file: /kernel/.github/benchmarks/misc.json
                 benchmark-matrix-name: Misc
-                benchmark-build: false
+              - benchmark-file: /kernel/.github/benchmarks/Netbench.json
+                benchmark-matrix-name: Netbench
 
         steps:
           - name: Checkout hermit-rs
