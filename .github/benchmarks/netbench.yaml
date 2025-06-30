@@ -4,9 +4,17 @@
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin tcp-server-bw --release --target x86_64-unknown-linux-gnu
   command: |
     cargo run --manifest-path ./Cargo.toml --bin tcp-server-bw --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.5 --bytes 1048576 --rounds 1000 & \
-    sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
-        -initrd target/x86_64-unknown-hermit/release/tcp-client-bw -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
-        -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.1 --bytes 1048576 --rounds 1000"
+    sleep 5 && sudo qemu-system-x86_64 \
+        -display none \
+        -serial stdio \
+        -kernel hermit-loader-x86_64 \
+        -cpu host,migratable=no,+invtsc \
+        -enable-kvm \
+        -initrd target/x86_64-unknown-hermit/release/tcp-client-bw \
+        -smp 2 -m 1024M \
+        -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
+        -device virtio-net-pci,netdev=net0,disable-legacy=on \
+        -append "-- --address 10.0.5.1 --bytes 1048576 --rounds 1000"
   iterations: 5
   group: Networking
   plot_group: Netbench Bandwidth - 1000x1MB
