@@ -22,11 +22,11 @@ jobs:
         strategy:
           matrix:
             include:
-              - benchmark-file: /kernel/.github/benchmarks/general.json
+              - benchmark-file: /kernel/.github/benchmarks/general.yaml
                 benchmark-matrix-name: General
-              - benchmark-file: /kernel/.github/benchmarks/misc.json
+              - benchmark-file: /kernel/.github/benchmarks/misc.yaml
                 benchmark-matrix-name: Misc
-              - benchmark-file: /kernel/.github/benchmarks/Netbench.json
+              - benchmark-file: /kernel/.github/benchmarks/Netbench.yaml
                 benchmark-matrix-name: Netbench
 
         steps:
