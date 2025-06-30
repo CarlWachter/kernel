@@ -26,7 +26,7 @@ jobs:
                 benchmark-matrix-name: General
               - benchmark-file: /kernel/.github/benchmarks/misc.yaml
                 benchmark-matrix-name: Misc
-              - benchmark-file: /kernel/.github/benchmarks/Netbench.yaml
+              - benchmark-file: /kernel/.github/benchmarks/netbench.yaml
                 benchmark-matrix-name: Netbench
 
         steps:
