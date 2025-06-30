@@ -8,7 +8,7 @@
       --target x86_64-unknown-linux-gnu \
       --release \
       -- --address 10.0.5.5 --bytes 1048576 --rounds 1000 &
-    sleep 5 && sudo qemu-system-x86_64 \
+    sleep 2 && sudo qemu-system-x86_64 \
       -display none \
       -smp 2 \
       -m 1024M \
@@ -29,10 +29,23 @@
   manifest_path: benches/netbench/Cargo.toml
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin tcp-client-bw --release --target x86_64-unknown-linux-gnu
   command: |
-    sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
-            -initrd target/x86_64-unknown-hermit/release/tcp-server-bw -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
-            -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.5 --bytes 1048576 --rounds 1000" &
-    cargo run --manifest-path ./Cargo.toml --bin tcp-client-bw --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.1 --bytes 1048576 --rounds 1000
+    sudo qemu-system-x86_64 \
+      -display none \
+      -smp 2 \
+      -m 1024M \
+      -serial stdio \
+      -enable-kvm \
+      -cpu host,migratable=no,+invtsc \
+      -kernel hermit-loader-x86_64 \
+      -initrd target/x86_64-unknown-hermit/release/tcp-server-bw \
+      -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
+      -device virtio-net-pci,netdev=net0,disable-legacy=on \
+      -append "-- --address 10.0.5.5 --bytes 1048576 --rounds 1000" &
+    sleep 2 && cargo run --manifest-path ./Cargo.toml \
+      --bin tcp-client-bw \
+      --target x86_64-unknown-linux-gnu \
+      --release \
+      -- --address 10.0.5.1 --bytes 1048576 --rounds 1000
   iterations: 5
   group: Networking
   plot_group: Netbench Bandwidth - 1000x1MB
@@ -42,7 +55,11 @@
   manifest_path: benches/netbench/Cargo.toml
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin tcp-server-latency --release --target x86_64-unknown-linux-gnu
   command: |
-    cargo run --manifest-path ./Cargo.toml --bin tcp-server-latency --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.5 --bytes 1048576 --rounds 250 &
+    cargo run --manifest-path ./Cargo.toml \
+      --bin tcp-server-latency \
+      --target x86_64-unknown-linux-gnu \
+      --release \
+      -- --address 10.0.5.5 --bytes 1048576 --rounds 250 &
     sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
         -initrd target/x86_64-unknown-hermit/release/tcp-client-latency -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
         -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.1 --bytes 1048576 --rounds 250"
@@ -55,7 +72,11 @@
   manifest_path: benches/netbench/Cargo.toml
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin tcp-client-latency --release --target x86_64-unknown-linux-gnu
   command: |
-    cargo run --manifest-path ./Cargo.toml --bin tcp-client-latency --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.1 --bytes 1048576 --rounds 250 &
+    cargo run --manifest-path ./Cargo.toml \
+      --bin tcp-client-latency \
+      --target x86_64-unknown-linux-gnu \
+      --release \
+      -- --address 10.0.5.1 --bytes 1048576 --rounds 250 &
     sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
         -initrd target/x86_64-unknown-hermit/release/tcp-server-latency -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
         -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.5 --bytes 1048576 --rounds 250"
@@ -68,10 +89,23 @@
   manifest_path: benches/netbench/Cargo.toml
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin udp-client-bw --release --target x86_64-unknown-linux-gnu
   command: |
-    sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
-        -initrd target/x86_64-unknown-hermit/release/udp-server-bw -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
-        -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.5 --bytes 1472 --rounds 1000" &
-    cargo run --manifest-path ./Cargo.toml --bin udp-client-bw --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.1 --bytes 1472 --rounds 1000
+    sudo qemu-system-x86_64 \
+      -display none \
+      -smp 2 \
+      -m 1024M \
+      -serial stdio \
+      -enable-kvm \
+      -cpu host,migratable=no,+invtsc \
+      -kernel hermit-loader-x86_64 \
+      -initrd target/x86_64-unknown-hermit/release/udp-server-bw \
+      -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
+      -device virtio-net-pci,netdev=net0,disable-legacy=on \
+      -append "-- --address 10.0.5.5 --bytes 1472 --rounds 1000" &
+    sleep 2 && cargo run --manifest-path ./Cargo.toml \
+      --bin udp-client-bw \
+      --target x86_64-unknown-linux-gnu \
+      --release \
+      -- --address 10.0.5.1 --bytes 1472 --rounds 1000
   iterations: 5
   group: Networking
   plot_group: Netbench Bandwidth - 1000x1472B
@@ -81,10 +115,23 @@
   manifest_path: benches/netbench/Cargo.toml
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin udp-client-bw --release --target x86_64-unknown-linux-gnu
   command: |
-    sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
-        -initrd target/x86_64-unknown-hermit/release/udp-client-bw -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
-        -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.5 --bytes 1472 --rounds 1000" &
-    cargo run --manifest-path ./Cargo.toml --bin udp-server-bw --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.5 --bytes 1472 --rounds 1000
+    cargo run --manifest-path ./Cargo.toml \
+      --bin udp-server-bw \
+      --target x86_64-unknown-linux-gnu \
+      --release \
+      -- --address 10.0.5.5 --bytes 1472 --rounds 1000 &
+    sleep 2 && sudo qemu-system-x86_64 \
+      -display none \
+      -smp 2 \
+      -m 1024M \
+      -serial stdio \
+      -enable-kvm \
+      -cpu host,migratable=no,+invtsc \
+      -kernel hermit-loader-x86_64 \
+      -initrd target/x86_64-unknown-hermit/release/udp-client-bw \
+      -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
+      -device virtio-net-pci,netdev=net0,disable-legacy=on \
+      -append "-- --address 10.0.5.1 --bytes 1472 --rounds 1000"
   iterations: 5
   group: Networking
   plot_group: Netbench Bandwidth - 1000x1472B
@@ -94,20 +141,49 @@
   manifest_path: benches/netbench/Cargo.toml
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin udp-server-latency --release --target x86_64-unknown-linux-gnu
   command: |
-    cargo run --manifest-path ./Cargo.toml --bin udp-server-latency --release --target x86_64-unknown-linux-gnu -- --address &
-    sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
-        -initrd target/x86_64-unknown-hermit/release/udp-client-latency -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
-        -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.1 --bytes 1472 --rounds 1000"
+    cargo run --manifest-path ./Cargo.toml \
+      --bin udp-server-latency \
+      --target x86_64-unknown-linux-gnu \
+      --release \
+      -- --address 10.0.5.5 --bytes 1472 --rounds 1000 &
+    sleep 2 && sudo qemu-system-x86_64 \
+      -display none \
+      -smp 2 \
+      -m 1024M \
+      -serial stdio \
+      -enable-kvm \
+      -cpu host,migratable=no,+invtsc \
+      -kernel hermit-loader-x86_64 \
+      -initrd target/x86_64-unknown-hermit/release/udp-client-latency \
+      -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
+      -device virtio-net-pci,netdev=net0,disable-legacy=on \
+      -append "-- --address 10.0.5.1 --bytes 1472 --rounds 1000"
+  iterations: 5
+  group: Networking
+  plot_group: Netbench Latency - 1000x1472B
 
 - name: Netbench UDP Latency - Server
   bin: udp-server-latency
   manifest_path: benches/netbench/Cargo.toml
   pre_run_command: cargo build --manifest-path ./Cargo.toml --bin udp-client-latency --release --target x86_64-unknown-linux-gnu
   command: |
-    sudo qemu-system-x86_64 -display none -serial stdio -kernel hermit-loader-x86_64 -cpu host,migratable=no,+invtsc -enable-kvm \
-        -initrd target/x86_64-unknown-hermit/release/udp-server-latency -smp 2 -m 1024M -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
-        -device virtio-net-pci,netdev=net0,disable-legacy=on -append "-- --address 10.0.5.5 --bytes 1472 --rounds 1000" &
-    cargo run --manifest-path ./Cargo.toml --bin udp-client-latency --release --target x86_64-unknown-linux-gnu -- --address 10.0.5.1 --bytes 1472 --rounds 1000
+    sudo qemu-system-x86_64 \
+      -display none \
+      -smp 2 \
+      -m 1024M \
+      -serial stdio \
+      -enable-kvm \
+      -cpu host,migratable=no,+invtsc \
+      -kernel hermit-loader-x86_64 \
+      -initrd target/x86_64-unknown-hermit/release/udp-server-latency \
+      -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
+      -device virtio-net-pci,netdev=net0,disable-legacy=on \
+      -append "-- --address 10.0.5.5 --bytes 1472 --rounds 1000" &
+    sleep 2 && cargo run --manifest-path ./Cargo.toml \
+      --bin udp-client-latency \
+      --target x86_64-unknown-linux-gnu \
+      --release \
+      -- --address 10.0.5.1 --bytes 1472 --rounds 1000 
   iterations: 5
   group: Networking
-  plot_group: Netbench Latency - 250x1472B
+  plot_group: Netbench Latency - 1000x1472B
