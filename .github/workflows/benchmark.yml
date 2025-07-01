@@ -81,7 +81,7 @@ jobs:
                 --target x86_64-unknown-linux-gnu \
                 --release \
                 -- --address 10.0.5.5 --bytes 1048576 --rounds 1000 &
-              sleep 2 && sudo qemu-system-x86_64 \
+              sleep 20 && sudo qemu-system-x86_64 \
                 -display none \
                 -smp 2 \
                 -m 1024M \
