@@ -66,13 +66,6 @@ jobs:
           - uses: mkroening/rust-toolchain-toml@main
             with:
               toolchain-file: "kernel/rust-toolchain.toml"
-          - name: Set up tap device
-            if: matrix.benchmark-matrix-name == 'Netbench'
-            run: |
-              sudo ip tuntap add tap10 mode tap
-              sudo ip addr add 10.0.5.1/24 broadcast 10.0.5.255 dev tap10
-              sudo ip link set dev tap10 
-              echo 1 | sudo tee /proc/sys/net/ipv4/conf/tap10/proxy_arp
           - name: manual run
             run: |
               cargo build --manifest-path benches/netbench/Cargo.toml --bin tcp-client-bw \
@@ -94,7 +87,7 @@ jobs:
                 -cpu host,migratable=no,+invtsc \
                 -kernel hermit-loader-x86_64 \
                 -initrd target/x86_64-unknown-hermit/release/tcp-client-bw \
-                -netdev tap,id=net0,ifname=tap10,script=no,downscript=no,vhost=on \
+                -netdev tap,id=net0,ifname=tap10,script=xtask/hermit-ifup,vhost=on \
                 -device virtio-net-pci,netdev=net0,disable-legacy=on \
                 -append "-- --address 10.0.5.1 --bytes 1048576 --rounds 1000"
           - name: Run benchmarks
