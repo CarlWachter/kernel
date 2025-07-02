@@ -14,7 +14,7 @@
       --target x86_64-unknown-linux-gnu \
       --release \
       -- --address 10.0.5.5 --bytes 1048576 --rounds 1000 &
-    sleep 2 && sudo qemu-system-x86_64 \
+    sleep 12 && sudo qemu-system-x86_64 \
       -display none \
       -smp 2 \
       -m 1024M \
@@ -52,7 +52,7 @@
       -netdev tap,id=net0,ifname=tap10,script=kernel/xtask/hermit-ifup,vhost=on \
       -device virtio-net-pci,netdev=net0,disable-legacy=on \
       -append "-- --address 10.0.5.5 --bytes 1048576 --rounds 1000" &
-    sleep 2 && cargo run --manifest-path benches/netbench/Cargo.toml \
+    sleep 12 && cargo run --manifest-path benches/netbench/Cargo.toml \
       --bin tcp-client-bw \
       --target x86_64-unknown-linux-gnu \
       --release \
