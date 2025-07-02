@@ -75,7 +75,7 @@ jobs:
               tool: 'hermit-bench'
               output-file-path: ${{ steps.run-bench.outputs.result-file }}
               github-token: ${{ github.event_name == 'push' && secrets.HERMIT_BENCH_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-              benchmark-data-dir-path: benchmarks
+              benchmark-data-dir-path: .
               gh-repository: github.com/CarlWachter/hermit-bench
               comment-always: true
               benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
