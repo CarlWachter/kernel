@@ -195,7 +195,7 @@
 <a href=#195 id=195 data-nosnippet>195</a>		<span class="kw">let </span><span class="kw-2">mut </span>transfer_result =
 <a href=#196 id=196 data-nosnippet>196</a>			<span class="self">self</span>.vqueues[<span class="number">1</span>].dispatch_blocking(buffer_tkn, BufferType::Direct)<span class="question-mark">?</span>;
 <a href=#197 id=197 data-nosnippet>197</a>
-<a href=#198 id=198 data-nosnippet>198</a>		<span class="kw">let </span>headers = transfer_result.used_recv_buff.pop_front_downcast().unwrap();
+<a href=#198 id=198 data-nosnippet>198</a>		<span class="kw">let </span>headers = <span class="kw">unsafe </span>{ transfer_result.used_recv_buff.pop_front_downcast().unwrap() };
 <a href=#199 id=199 data-nosnippet>199</a>		<span class="kw">let </span>payload = transfer_result.used_recv_buff.pop_front_vec();
 <a href=#200 id=200 data-nosnippet>200</a>		<span class="prelude-val">Ok</span>(Rsp { headers, payload })
 <a href=#201 id=201 data-nosnippet>201</a>	}

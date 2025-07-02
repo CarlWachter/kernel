@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"enum":["Ctrl","HashReport"],"mod":["ctrl"],"struct":["Config","F","HashType","Hdr","HdrF","HdrGso","HdrHashReport","S"],"trait":["ConfigVolatileFieldAccess"]};
+window.SIDEBAR_ITEMS = {"enum":["Ctrl","HashReport","HdrGso"],"mod":["ctrl"],"struct":["Config","F","HashType","Hdr","HdrF","HdrHashReport","S"],"trait":["ConfigVolatileFieldAccess"]};

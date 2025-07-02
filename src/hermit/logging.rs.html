@@ -82,7 +82,7 @@
 <a href=#82 id=82 data-nosnippet>82</a>	log::set_max_level(max_level);
 <a href=#83 id=83 data-nosnippet>83</a>}
 <a href=#84 id=84 data-nosnippet>84</a>
-<a href=#85 id=85 data-nosnippet>85</a><span class="attr">#[cfg(any(not(target_arch = <span class="string">"riscv64"</span>), feature = <span class="string">"pci"</span>, feature = <span class="string">"tcp"</span>))]
+<a href=#85 id=85 data-nosnippet>85</a><span class="attr">#[cfg_attr(target_arch = <span class="string">"riscv64"</span>, allow(unused))]
 <a href=#86 id=86 data-nosnippet>86</a></span><span class="macro">macro_rules!</span> infoheader {
 <a href=#87 id=87 data-nosnippet>87</a>	<span class="comment">// This should work on paper, but it's currently not supported :(
 <a href=#88 id=88 data-nosnippet>88</a>	// Refer to https://github.com/rust-lang/rust/issues/46569
@@ -102,7 +102,7 @@
 <a href=#102 id=102 data-nosnippet>102</a>	(<span class="macro-nonterminal">$str</span>:expr, $(<span class="macro-nonterminal">$arg</span>:tt)+) =&gt; (<span class="macro">::log::info!</span>(<span class="string">"{:25}{}"</span>, <span class="macro">concat!</span>(<span class="macro-nonterminal">$str</span>, <span class="string">":"</span>), <span class="macro">format_args!</span>($(<span class="macro-nonterminal">$arg</span>)+)));
 <a href=#103 id=103 data-nosnippet>103</a>}
 <a href=#104 id=104 data-nosnippet>104</a>
-<a href=#105 id=105 data-nosnippet>105</a><span class="attr">#[cfg(any(not(target_arch = <span class="string">"riscv64"</span>), feature = <span class="string">"pci"</span>, feature = <span class="string">"tcp"</span>))]
+<a href=#105 id=105 data-nosnippet>105</a><span class="attr">#[cfg_attr(target_arch = <span class="string">"riscv64"</span>, allow(unused))]
 <a href=#106 id=106 data-nosnippet>106</a></span><span class="macro">macro_rules!</span> infofooter {
 <a href=#107 id=107 data-nosnippet>107</a>	() =&gt; {{
 <a href=#108 id=108 data-nosnippet>108</a>		<span class="macro">::log::info!</span>(<span class="string">"{:=^70}"</span>, <span class="string">'='</span>);
