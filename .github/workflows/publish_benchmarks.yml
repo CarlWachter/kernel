@@ -20,7 +20,7 @@ jobs:
       matrix:
         include:
           - benchmark-matrix-name: General
-          #- benchmark-matrix-name: Misc
+          - benchmark-matrix-name: Misc
 
     env:
       GH_TOKEN: ${{ github.token }}
@@ -61,3 +61,5 @@ jobs:
         comment-always: true
         benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
         auto-push: true
+        ref: ${{ github.event.workflow_run.head_sha }}
+        
