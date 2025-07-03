@@ -62,4 +62,4 @@ jobs:
         benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
         auto-push: true
         ref: ${{ github.event.workflow_run.head_sha }}
-        
+        pr-number: ${{ github.event.workflow_run.pull_requests && github.event.workflow_run.pull_requests[0].number || '0' }}
