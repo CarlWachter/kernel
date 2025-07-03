@@ -23,38 +23,38 @@ jobs:
           - benchmark-matrix-name: General
           #- benchmark-matrix-name: Misc
 
+    env:
+      GH_TOKEN: ${{ github.token }}
+
     steps:
-    - name: 'Download artifact'
-      uses: actions/github-script@v5
-      with:
-        github-token: ${{ secrets.HERMIT_BENCH_GITHUB_TOKEN }}
-        script: |
-          let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id,
-          });
+    - name: Set up GitHub CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install gh -y
+    - name: Download artifact from another workflow
+      run: |
+        run_id="${{ github.event.workflow_run.id }}"
+        artifact_name="${{ matrix.benchmark-matrix-name }}-benchmark-results"
 
-          // print all artifacts for debugging
-          console.log(allArtifacts.data.artifacts);
+        echo "Fetching artifact '${artifact_name}' from run ${run_id}"
 
-          let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-            return artifact.name == "${{ matrix.benchmark-matrix-name }}-benchmark-results"
-          })[0];
+        # List artifacts and extract matching ID
+        artifact_id=$(gh api \
+          repos/${{ github.repository }}/actions/runs/$run_id/artifacts \
+          --jq ".artifacts[] | select(.name == \"${artifact_name}\") | .id")
 
-          console.log(`Found artifact: ${matchArtifact.name} with id: ${matchArtifact.id}`);
+        if [ -z "$artifact_id" ]; then
+          echo "Artifact '$artifact_name' not found"
+          exit 1
+        fi
 
-          let download = await github.rest.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
-          });
+        # Download the artifact by ID
+        gh api \
+          -H "Accept: application/vnd.github+json" \
+          repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip \
+          --output results.zip
 
-          console.log(`Downloaded artifact: ${matchArtifact.name} with size: ${download.data.length} bytes`);
-
-          let fs = require('fs');
-          fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/results.zip`, Buffer.from(download.data));
+        echo "Artifact downloaded as results.zip"
     - name: 'Unzip artifact'
       run: unzip results.zip
     - name: Store benchmark results
