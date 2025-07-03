@@ -26,16 +26,33 @@ jobs:
             benchmark-matrix-name: Misc
 
     steps:
-    - name: Download results artifact
-      uses: actions/download-artifact@v4
+    - name: 'Download artifact'
+      uses: actions/github-script@v5
       with:
-        name: '${{ matrix.benchmark-matrix-name }}-benchmark-results'
-        path: results.json
+        script: |
+          let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+          });
+          let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+            return artifact.name == "${{ matrix.benchmark-matrix-name }}-benchmark-results"
+          })[0];
+          let download = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
+          });
+          let fs = require('fs');
+          fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/results.zip`, Buffer.from(download.data));
+    - name: 'Unzip artifact'
+      run: unzip results.zip
     - name: Store benchmark results
       uses: hermit-os/github-action-benchmark@main
       with:
         tool: "hermit-bench"
-        output-file-path: ./artifact/results.json
+        output-file-path: results.json
         github-token: ${{ github.event_name == 'push' && secrets.HERMIT_BENCH_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
         benchmark-data-dir-path: .
         gh-repository: github.com/CarlWachter/hermit-bench
