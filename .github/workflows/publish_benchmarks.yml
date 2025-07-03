@@ -50,12 +50,14 @@ jobs:
 
         # Get redirect URL from GitHub API
         download_url=$(gh api \
-          -H "Accept: application/vnd.github+json" \
-          repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip \
-          -i | grep -Fi Location: | cut -d' ' -f2 | tr -d '\r')
+          repos/${{ github.repository }}/actions/artifacts/$artifact_id \
+          --jq '.archive_download_url')
 
         if [ -z "$download_url" ]; then
           echo "Failed to retrieve download URL"
+          gh api \
+            repos/${{ github.repository }}/actions/artifacts/$artifact_id \
+            --jq '.archive_download_url'
           exit 1
         fi
 
