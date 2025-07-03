@@ -30,7 +30,6 @@ jobs:
         script: |
           const fs = require('fs');
           const path = require('path');
-          const admZip = require('adm-zip');
 
           // Get artifacts
           const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
