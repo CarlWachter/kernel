@@ -13,10 +13,6 @@ jobs:
   benchmark:
     name: Run Benchmarks
     runs-on: ubuntu-latest
-    environment: ${{ github.event_name == 'push' && 'benchmark' || '' }}
-
-    permissions:
-      pull-requests: write
 
     strategy:
       matrix:
@@ -53,8 +49,6 @@ jobs:
         id: run-bench
         with:
           benchmark-file: ${{ matrix.benchmark-file }}
-      - name: List workspace contents
-        run: ls -R ${{ github.workspace }}
       - name: Upload benchmark results
         uses: actions/upload-artifact@v4
         with:
