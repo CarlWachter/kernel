@@ -26,36 +26,60 @@ jobs:
             benchmark-matrix-name: Misc
 
     steps:
-    - name: 'Download artifact'
+    - name: 'Download artifact from another workflow'
       uses: actions/github-script@v5
       with:
         script: |
-          let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.payload.workflow_run.id,
+          const https = require('https');
+          const fs = require('fs');
+          const { promisify } = require('util');
+          const stream = require('stream');
+          const pipeline = promisify(stream.pipeline);
+
+          const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            run_id: context.payload.workflow_run.id,
           });
 
-          // print all artifacts for debugging
-          console.log(allArtifacts.data.artifacts);
+          console.log("Available artifacts:", artifacts.data.artifacts.map(a => a.name));
 
-          let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
-            return artifact.name == "${{ matrix.benchmark-matrix-name }}-benchmark-results"
-          })[0];
+          const artifact = artifacts.data.artifacts.find(a =>
+            a.name === `${{ matrix.benchmark-matrix-name }}-benchmark-results`
+          );
 
-          console.log(`Found artifact: ${matchArtifact.name} with id: ${matchArtifact.id}`);
+          if (!artifact) {
+            throw new Error("Artifact not found");
+          }
 
-          let download = await github.rest.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
+          console.log(`Found artifact: ${artifact.name} (ID: ${artifact.id})`);
+
+          const res = await github.rest.actions.downloadArtifact({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            artifact_id: artifact.id,
+            archive_format: 'zip',
           });
 
-          console.log(`Downloaded artifact: ${matchArtifact.name} with size: ${download.data.length} bytes`);
+          const url = res.url;
 
-          let fs = require('fs');
-          fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/results.zip`, Buffer.from(download.data));
+          console.log(`Redirect URL: ${url}`);
+
+          await new Promise((resolve, reject) => {
+            https.get(url, response => {
+              if (response.statusCode !== 200) {
+                return reject(new Error(`Failed to download artifact. Status: ${response.statusCode}`));
+              }
+
+              const fileStream = fs.createWriteStream(`${process.env.GITHUB_WORKSPACE}/results.zip`);
+              response.pipe(fileStream);
+              fileStream.on('finish', () => {
+                fileStream.close(resolve);
+              });
+            }).on('error', reject);
+          });
+
+          console.log("Artifact downloaded successfully.");
     - name: 'Unzip artifact'
       run: unzip results.zip
     - name: Store benchmark results
