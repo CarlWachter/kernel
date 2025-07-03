@@ -38,6 +38,9 @@ jobs:
             run_id: context.payload.workflow_run.id,
           });
 
+          // print the artifacts for debugging
+          console.log("Artifacts:", artifacts.data.artifacts);
+
           // Find the artifact named 'results'
           const artifact = artifacts.data.artifacts.find(a => a.name === '${{ matrix.benchmark-matrix-name }}-benchmark-results');
           if (!artifact) {
