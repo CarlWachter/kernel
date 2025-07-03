@@ -11,7 +11,7 @@
       -cpu host,migratable=no,+invtsc \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/startup_benchmark
-  iterations: 25
+  iterations: 1
   external_time: true
   group: General
   plot_group: Startup Time

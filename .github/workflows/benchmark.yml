@@ -1,7 +1,7 @@
 name: Benchmark
 
 on:
-  #pull_request:
+  pull_request:
   push:
     branches:
       - main
@@ -23,8 +23,8 @@ jobs:
         include:
           - benchmark-file: kernel/.github/benchmarks/general.yaml
             benchmark-matrix-name: General
-          - benchmark-file: kernel/.github/benchmarks/misc.yaml
-            benchmark-matrix-name: Misc
+          #- benchmark-file: kernel/.github/benchmarks/misc.yaml
+          #  benchmark-matrix-name: Misc
 
     steps:
       - name: Checkout hermit-rs
