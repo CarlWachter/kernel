@@ -51,8 +51,7 @@ jobs:
         # Download the artifact by ID
         gh api \
           -H "Accept: application/vnd.github+json" \
-          repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip \
-          --output results.zip
+          repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip
 
         echo "Artifact downloaded as results.zip"
     - name: 'Unzip artifact'
