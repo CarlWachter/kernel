@@ -64,10 +64,9 @@ jobs:
         echo "Downloading ZIP from redirect URL..."
 
         # Follow redirect and download actual zip
-        curl -L "$download_url" --output results.zip
-
-        echo "Download complete, extracting..."
-        unzip results.zip
+        curl -L "$download_url"
+        
+        ls -l
     - name: Store benchmark results
       uses: hermit-os/github-action-benchmark@main
       with:
