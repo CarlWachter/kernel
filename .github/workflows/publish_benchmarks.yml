@@ -30,7 +30,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: '${{ matrix.benchmark-matrix-name }}-benchmark-results'
-        path: ./artifact
+        path: results.json
     - name: Store benchmark results
       uses: hermit-os/github-action-benchmark@main
       with:
