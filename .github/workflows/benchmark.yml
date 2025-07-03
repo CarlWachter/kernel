@@ -1,82 +1,66 @@
 name: Benchmark
 
 on:
-  pull_request:
-  merge_group:
+  pull_request_target:
   push:
     branches:
       - main
-
-permissions:
-          pull-requests: write 
 
 env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-    benchmark:
-        name: Run Benchmarks
-        runs-on: ubuntu-24.04 #[self-hosted]
-        environment: ${{ github.event_name == 'push' && 'benchmark' || '' }}
+  benchmark:
+    name: Run Benchmarks
+    runs-on: [self-hosted]
+    environment: ${{ github.event_name == 'push' && 'benchmark' || '' }}
 
-        strategy:
-          matrix:
-            include:
-              - benchmark-file: /kernel/.github/benchmarks/general.yaml
-                benchmark-matrix-name: General
-              - benchmark-file: /kernel/.github/benchmarks/misc.yaml
-                benchmark-matrix-name: Misc
-              #- benchmark-file: /kernel/.github/benchmarks/netbench.yaml
-              #  benchmark-matrix-name: Netbench
+    permissions:
+      pull-requests: write
 
-        steps:
-          - name: Checkout hermit-rs
-            uses: actions/checkout@v4
-            with:
-              repository: hermit-os/hermit-rs
-              submodules: true
-          - name: Remove hermit-kernel submodule
-            run: git rm -r kernel
-          - name: Checkout hermit-kernel
-            uses: actions/checkout@v4
-            with:
-              path: kernel
-          - name: Install dependencies
-            run: |
-              sudo apt-get update
-              sudo apt-get install -y --no-install-recommends qemu-system-x86 cpu-checker parallel gh
-          - name: Download loader
-            run: gh release download --repo hermit-os/loader --pattern hermit-loader-x86_64
-          - uses: mkroening/rust-toolchain-toml@main
-          - name: Check KVM availability
-            run: |
-              lscpu
-              kvm-ok
-          - uses: dtolnay/rust-toolchain@stable
-          - uses: dtolnay/rust-toolchain@nightly
-            with:
-              components: rust-src
-          - uses: mkroening/rust-toolchain-toml@main
-          - run: rustup component add llvm-tools
-            working-directory: .
-          - run: rustup target add wasm32-wasip1
-            working-directory: .
-          - uses: mkroening/rust-toolchain-toml@main
-            with:
-              toolchain-file: "kernel/rust-toolchain.toml"
-          - name: Run benchmarks
-            uses: hermit-os/hermit-bench@main
-            id: run-bench
-            with: 
-              benchmark-file: ${{ matrix.benchmark-file }}
-          - name: Store benchmark results
-            uses: hermit-os/github-action-benchmark@main
-            with:
-              tool: 'hermit-bench'
-              output-file-path: ${{ steps.run-bench.outputs.result-file }}
-              github-token: ${{ github.event_name == 'push' && secrets.HERMIT_BENCH_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-              benchmark-data-dir-path: .
-              gh-repository: github.com/CarlWachter/hermit-bench
-              comment-always: true
-              benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
-              auto-push: ${{ github.event_name == 'push' }} 
+    strategy:
+      matrix:
+        include:
+          - benchmark-file: kernel/.github/benchmarks/general.yaml
+            benchmark-matrix-name: General
+          - benchmark-file: kernel/.github/benchmarks/misc.yaml
+            benchmark-matrix-name: Misc
+
+    steps:
+      - name: Checkout hermit-rs
+        uses: actions/checkout@v4
+        with:
+          repository: hermit-os/hermit-rs
+          submodules: true
+      - name: Remove hermit-kernel submodule
+        run: git rm -r kernel
+      - name: Checkout hermit-kernel
+        uses: actions/checkout@v4
+        with:
+          path: kernel
+      - name: Install packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qemu-system-x86 gh
+      - uses: mkroening/rust-toolchain-toml@main
+      - uses: mkroening/rust-toolchain-toml@main
+        with:
+          toolchain-file: "kernel/rust-toolchain.toml"
+      - name: Download loader
+        run: gh release download --repo hermit-os/loader --pattern hermit-loader-x86_64
+      - name: Run benchmarks
+        uses: hermit-os/hermit-bench@main
+        id: run-bench
+        with:
+          benchmark-file: ${{ matrix.benchmark-file }}
+      - name: Store benchmark results
+        uses: hermit-os/github-action-benchmark@main
+        with:
+          tool: "hermit-bench"
+          output-file-path: ${{ steps.run-bench.outputs.result-file }}
+          github-token: ${{ github.event_name == 'push' && secrets.HERMIT_BENCH_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          benchmark-data-dir-path: .
+          gh-repository: github.com/hermit-os/hermit-bench
+          comment-always: true
+          benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
+          auto-push: ${{ github.event_name == 'push' }}
