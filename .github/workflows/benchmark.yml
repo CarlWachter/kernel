@@ -11,7 +11,6 @@ env:
 
 jobs:
   benchmark:
-    name: Run Benchmarks
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,8 +18,8 @@ jobs:
         include:
           - benchmark-file: kernel/.github/benchmarks/general.yaml
             benchmark-matrix-name: General
-          #- benchmark-file: kernel/.github/benchmarks/misc.yaml
-          #  benchmark-matrix-name: Misc
+          - benchmark-file: kernel/.github/benchmarks/misc.yaml
+            benchmark-matrix-name: Misc
 
     steps:
       - name: Checkout hermit-rs

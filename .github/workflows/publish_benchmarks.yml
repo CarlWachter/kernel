@@ -8,7 +8,6 @@ on:
 
 jobs:
   publish_benchmarks:
-    name: Run Benchmarks
     runs-on: ubuntu-latest
     environment: benchmark
 
