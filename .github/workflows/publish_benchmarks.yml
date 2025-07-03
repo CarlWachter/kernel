@@ -48,25 +48,14 @@ jobs:
           exit 1
         fi
 
-        # Get redirect URL from GitHub API
-        download_url=$(gh api \
-          repos/${{ github.repository }}/actions/artifacts/$artifact_id \
-          --jq '.archive_download_url')
+        gh api /repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip > results.zip
 
         if [ -z "$download_url" ]; then
-          echo "Failed to retrieve download URL"
-          gh api \
-            repos/${{ github.repository }}/actions/artifacts/$artifact_id \
-            --jq '.archive_download_url'
+          echo "Failed to download artifact"
           exit 1
         fi
 
-        echo "Downloading ZIP from redirect URL..."
-
-        # Follow redirect and download actual zip
-        curl -L "$download_url"
-        
-        ls -l
+        unzip results.zip
     - name: Store benchmark results
       uses: hermit-os/github-action-benchmark@main
       with:
