@@ -45,7 +45,7 @@ jobs:
 
         unzip results.zip
     - name: Comment benchmark results to PR
-      if: ${{ github.event.workflow_run.event }} == 'pull_request'
+      if: github.event.workflow_run.event == 'pull_request'
       uses: hermit-os/github-action-benchmark@main
       with:
         tool: "hermit-bench"
@@ -58,7 +58,7 @@ jobs:
         ref: ${{ github.event.workflow_run.head_sha }}
         pr-number: ${{ github.event.workflow_run.pull_requests[0].number }}
     - name: Publish benchmark results to hermit-bench
-      if: ${{ github.event.workflow_run.event }} == 'push'
+      if: github.event.workflow_run.event == 'push'
       uses: hermit-os/github-action-benchmark@main
       with:
         tool: "hermit-bench"
