@@ -14,36 +14,36 @@ jobs:
     permissions:
       pull-requests: write
 
-    strategy:
-      matrix:
-        include:
-          - benchmark-matrix-name: General
-          - benchmark-matrix-name: Misc
-
     env:
       GH_TOKEN: ${{ github.token }}
 
     steps:
       - name: Download artifact from another workflow
         run: |
-          run_id="${{ github.event.workflow_run.id }}"
-          artifact_name="${{ matrix.benchmark-matrix-name }}-benchmark-results"
+          download_artifact() {
+            run_id="${{ github.event.workflow_run.id }}"
+            artifact_name="$1-benchmark-results"
 
-          echo "Fetching artifact '${artifact_name}' from run ${run_id}"
+            echo "Fetching artifact '${artifact_name}' from run ${run_id}"
 
-          # List artifacts and extract matching ID
-          artifact_id=$(gh api \
-            repos/${{ github.repository }}/actions/runs/$run_id/artifacts \
-            --jq ".artifacts[] | select(.name == \"${artifact_name}\") | .id")
+            artifact_id=$(gh api \
+              repos/${{ github.repository }}/actions/runs/$run_id/artifacts \
+              --jq ".artifacts[] | select(.name == \"${artifact_name}\") | .id")
 
-          if [ -z "$artifact_id" ]; then
-            echo "Artifact '$artifact_name' not found"
-            exit 1
-          fi
+            if [ -z "$artifact_id" ]; then
+              echo "Artifact '$artifact_name' not found"
+              exit 1
+            fi
 
-          gh api /repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip > results.zip
+            gh api /repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip > results.zip
+            unzip results.zip
+            mv results.json "$1.json"
+          }
 
-          unzip results.zip
+          download_artifact "General"
+          download_artifact "Misc"
+
+          jq -s 'add' General.json Misc.json > results.json
       - name: Comment benchmark results to PR
         if: github.event.workflow_run.event == 'pull_request'
         uses: hermit-os/github-action-benchmark@main
