@@ -45,9 +45,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Find PR Number
+        if: github.event.workflow_run.event == 'pull_request'
         id: find_pr
         run: |
-          gh pr list --repo ${{ github.repository }} --head ${{ github.event.workflow_run.head_branch}} --json number -q '.[0].number'
+          PR=$(gh pr list --repo ${{ github.repository }} --head ${{ github.event.workflow_run.head_branch}} --json number -q '.[0].number')
           echo "pr_number=$PR" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
