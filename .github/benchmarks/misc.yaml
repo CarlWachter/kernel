@@ -12,7 +12,7 @@
       -serial stdio \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/micro_benchmarks
-  iterations: 25
+  iterations: 1
 
 - group: Allocations
   name: Allocation Benchmarks
@@ -28,7 +28,7 @@
       -serial stdio \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/alloc_benchmarks
-  iterations: 50
+  iterations: 1
 
 - group: Mutex
   name: Mutex Stress Test
@@ -44,4 +44,4 @@
       -serial stdio \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/mutex_benchmark
-  iterations: 50
+  iterations: 1

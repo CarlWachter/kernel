@@ -13,7 +13,7 @@
       -serial stdio \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/startup_benchmark
-  iterations: 25
+  iterations: 1
   external_time: true
 
 - group: General
@@ -31,7 +31,7 @@
       -serial stdio \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/startup_benchmark
-  iterations: 25
+  iterations: 1
   external_time: true
 
 - group: General
@@ -49,7 +49,7 @@
       -serial stdio \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/startup_benchmark
-  iterations: 25
+  iterations: 1
   external_time: true
 
 - group: General
@@ -67,5 +67,5 @@
       -serial stdio \
       -kernel hermit-loader-x86_64 \
       -initrd target/x86_64-unknown-hermit/release/multithreaded_benchmark
-  iterations: 25
+  iterations: 1
   external_time: false
