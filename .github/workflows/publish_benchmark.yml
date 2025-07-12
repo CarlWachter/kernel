@@ -52,7 +52,7 @@ jobs:
           output-file-path: results.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
           benchmark-data-dir-path: .
-          gh-repository: github.com/hermit-os/hermit-bench
+          gh-repository: github.com/CarlWachter/hermit-bench
           comment-always: true
           benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
           ref: ${{ github.event.workflow_run.head_sha }}
@@ -65,7 +65,7 @@ jobs:
           output-file-path: results.json
           github-token: ${{ secrets.HERMIT_BENCH_GITHUB_TOKEN }}
           benchmark-data-dir-path: .
-          gh-repository: github.com/hermit-os/hermit-bench
+          gh-repository: github.com/CarlWachter/hermit-bench
           benchmark-matrix-name: ${{ matrix.benchmark-matrix-name }}
           auto-push: true
           ref: ${{ github.event.workflow_run.head_sha }}
